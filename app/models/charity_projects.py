@@ -5,7 +5,7 @@ from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text
 from app.core.db import Base
 
 
-class Project(Base):
+class CharityProject(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100), unique=True, nullable=False)
     description = Column(Text, nullable=False)
