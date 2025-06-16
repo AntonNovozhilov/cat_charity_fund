@@ -29,6 +29,14 @@ class ProjectCRUD:
         await session.delete(project_remove)
         await session.commit()
         return project_remove
+    
+    async def update_project(self, obj: CharityProject, obj_in, session: AsyncSession) -> CharityProject:
+        up_data = obj_in.dict(exclude_unset=True)
+        for filed, value in up_data.items():
+            setattr(obj, filed, value)
+        await session.commit()
+        await session.refresh(obj)
+        return obj
 
 
 project = ProjectCRUD(CharityProject)
