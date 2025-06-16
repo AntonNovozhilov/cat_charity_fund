@@ -15,12 +15,13 @@ class ProjectCreate(ProjectsBase):
 
     class Config:
         schema_extra = {
-            'example': {
-                'name': 'Project 1',
-                'description': 'Первый проект',
-                'full_amount': 100000,
+            "example": {
+                "name": "Project 1",
+                "description": "Первый проект",
+                "full_amount": 100000,
             }
         }
+
 
 class ProjectUpdate(ProjectsBase):
     pass

@@ -14,9 +14,9 @@ class DonationsCreate(DonationsBase):
 
     class Config:
         schema_extra = {
-            'example': {
-                'full_amount': 100,
-                'comment': 'Первое пожертвование',
+            "example": {
+                "full_amount": 100,
+                "comment": "Первое пожертвование",
             }
         }
 
@@ -32,7 +32,7 @@ class DonationsGetCreateUser(DonationsBase):
 class DotationsDB(DonationsBase):
     id: int
     create_date: datetime
-    # user_id: int
+    user_id: int
     invested_amount: int
     fully_invested: bool
     close_date: Optional[datetime]

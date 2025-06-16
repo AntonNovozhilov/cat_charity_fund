@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from .endpoints import users, project, dotaton
+from .endpoints import dotaton, project, users
 
 main_router = APIRouter()
 main_router.include_router(users)

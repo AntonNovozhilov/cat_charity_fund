@@ -1,5 +1,5 @@
-qwe = ['qwewqe', 'qweqwe']
-asd = ['asd', 'zxcxzc']
+qwe = ["qwewqe", "qweqwe"]
+asd = ["asd", "zxcxzc"]
 
 
 d = qwe.extend(asd)
