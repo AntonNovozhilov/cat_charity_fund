@@ -3,10 +3,6 @@ from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.db import get_async_session
-from app.core.users import current_user
-from app.models.charity_projects import CharityProject
-from app.models.donations import Donation
 from app.models.users import User
 
 
@@ -25,8 +21,10 @@ class BaseCRUD:
         await session.refresh(new_obj)
         return new_obj
 
-    async def remove(self, id: int, session: AsyncSession):
-        remove = await session.execute(select(self.model).where(self.model.id == id))
+    async def remove(self, obj_id: int, session: AsyncSession):
+        remove = await session.execute(
+            select(self.model).where(self.model.id == obj_id)
+        )
         remove = remove.scalars().first()
         await session.delete(remove)
         await session.commit()
