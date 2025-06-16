@@ -13,14 +13,22 @@ class ProjectsBase(BaseModel):
 class ProjectCreate(ProjectsBase):
     pass
 
+    class Config:
+        schema_extra = {
+            'example': {
+                'name': 'Project 1',
+                'description': 'Первый проект',
+                'full_amount': 100000,
+            }
+        }
 
 class ProjectUpdate(ProjectsBase):
     pass
 
 
-class ProjectDB(BaseModel):
+class ProjectDB(ProjectsBase):
     id: int
-    invested_amount: int
+    invested_amount: int = Field(default=0)
     fully_invested: bool = Field(default=False)
     create_date: datetime
     close_date: Optional[datetime]
