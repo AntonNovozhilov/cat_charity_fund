@@ -7,11 +7,12 @@ from app.api.validators import check_project_exit
 
 
 
+
 route = APIRouter(tags=['charity_projects'])
 
 @route.post('/charity_project/', response_model=ProjectDB)
 async def create_charity_project(project_schema: ProjectCreate, session: AsyncSession = Depends(get_async_session)):
-    new_project =  await project.create_project(project_schema, session)
+    new_project =  await project.create(project_schema, session)
     return new_project
 
 @route.get('/', response_model=list[ProjectDB])
@@ -21,11 +22,11 @@ async def get_all_charity_projects(session: AsyncSession = Depends(get_async_ses
 
 @route.delete('/charity_project/{project_id}', response_model=ProjectDB)
 async def delete_charity_project(project_id: int, session: AsyncSession = Depends(get_async_session)):
-    project_remove = await project.remove_project(id=project_id, session=session)
+    project_remove = await project.remove(id=project_id, session=session)
     return project_remove
 
 @route.patch('/charity_project/{project_id}', response_model=ProjectDB)
 async def update_charity_project(project_id: int, obj: ProjectUpdate, session: AsyncSession = Depends(get_async_session)):
     ex_project = await check_project_exit(project_id, session)
-    new_project = await project.update_project(ex_project, obj, session)
+    new_project = await project.update(ex_project, obj, session)
     return new_project
