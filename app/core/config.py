@@ -1,4 +1,4 @@
-from pydantic import BaseSettings
+from pydantic import BaseSettings, Field
 
 
 class Settings(BaseSettings):
@@ -6,9 +6,9 @@ class Settings(BaseSettings):
     Класс конфигурации настроек для ядра приложения.
     """
 
-    title: str
-    date_base_url: str
-    secret: str
+    title: str = Field(..., env="TITLE")
+    date_base_url: str = Field(..., env="DATE_BASE_URL")
+    secret: str = Field(..., env="SECRET")
 
     class Config:
         env_file = ".env"
