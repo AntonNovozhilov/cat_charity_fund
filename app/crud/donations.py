@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.validators import check_donation_user
 from app.core.db import get_async_session
-from app.core.users import current_user
-from app.models.donations import Donation
+from app.core.user import current_user
+from app.models.donation import Donation
 from app.models.users import User
 
 from .base import BaseCRUD

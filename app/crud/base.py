@@ -11,11 +11,11 @@ class BaseCRUD:
     def __init__(self, model):
         self.model = model
 
-    async def create(self, data, session: AsyncSession, user: Optional[User]):
+    async def create(self, data, session: AsyncSession, user: Optional[User] = None):
         data_in = data.dict()
-        if user:
-            data_in["user_id"] = user.id
         new_obj = self.model(**data_in)
+        if user:
+            new_obj.user_id = user.id
         session.add(new_obj)
         await session.commit()
         await session.refresh(new_obj)

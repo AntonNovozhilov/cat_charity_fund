@@ -5,11 +5,15 @@ from app.api.validators import (
     check_close_date_project,
     check_invested_amount_project,
     check_project_exit,
+    check_upgrade_amount_project,
+    check_invested_amount_all
 )
 from app.core.db import get_async_session
-from app.core.users import current_seperuser
+from app.core.user import current_superuser
 from app.crud.charity_projects import project
 from app.schemas.charity_projects import ProjectCreate, ProjectDB, ProjectUpdate
+from app.models.donation import Donation
+from app.services.investing import invest
 
 route = APIRouter(tags=["charity_projects"])
 
@@ -17,7 +21,7 @@ route = APIRouter(tags=["charity_projects"])
 @route.post(
     "/charity_project/",
     response_model=ProjectDB,
-    dependencies=[Depends(current_seperuser)],
+    dependencies=[Depends(current_superuser)],
 )
 async def create_charity_project(
     project_schema: ProjectCreate, session: AsyncSession = Depends(get_async_session)
@@ -28,10 +32,11 @@ async def create_charity_project(
     """
 
     new_project = await project.create(project_schema, session)
+    await invest(new_project, Donation, session)
     return new_project
 
 
-@route.get("/", response_model=list[ProjectDB])
+@route.get("/charity_project/", response_model=list[ProjectDB])
 async def get_all_charity_projects(session: AsyncSession = Depends(get_async_session)):
     """Возвращает список всех проектов."""
 
@@ -42,7 +47,7 @@ async def get_all_charity_projects(session: AsyncSession = Depends(get_async_ses
 @route.delete(
     "/charity_project/{project_id}",
     response_model=ProjectDB,
-    dependencies=[Depends(current_seperuser)],
+    dependencies=[Depends(current_superuser)],
 )
 async def delete_charity_project(
     project_id: int, session: AsyncSession = Depends(get_async_session)
@@ -52,15 +57,15 @@ async def delete_charity_project(
     Удаляет проект. Нельзя удалить проект, в который уже были инвестированы средства, его можно только закрыть.
     """
 
-    project_remove = await check_invested_amount_project(id=project_id, session=session)
-    project_remove = await project.remove(id=project_id, session=session)
+    project_remove = await check_invested_amount_project(project_id, session)
+    project_remove = await project.remove(project_id, session)
     return project_remove
 
 
 @route.patch(
     "/charity_project/{project_id}",
     response_model=ProjectDB,
-    dependencies=[Depends(current_seperuser)],
+    dependencies=[Depends(current_superuser)],
 )
 async def update_charity_project(
     project_id: int,
@@ -74,5 +79,7 @@ async def update_charity_project(
 
     ex_project = await check_project_exit(project_id, session)
     ex_project = await check_close_date_project(project_id, session)
+    ex_project = await check_invested_amount_all(project_id, session)
     new_project = await project.update(ex_project, obj, session)
+    new_project = await check_upgrade_amount_project(project_id, session)
     return new_project

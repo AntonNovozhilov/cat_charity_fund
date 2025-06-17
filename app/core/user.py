@@ -55,4 +55,4 @@ fastapi_user = FastAPIUsers(
 )
 
 current_user = fastapi_user.current_user(active=True)
-current_seperuser = fastapi_user.current_user(active=True, superuser=True)
+current_superuser = fastapi_user.current_user(active=True, superuser=True)

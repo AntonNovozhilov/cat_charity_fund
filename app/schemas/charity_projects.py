@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field
 
 
 class ProjectsBase(BaseModel):
-    name: str = Field(max_length=100)
-    description: str
+    name: str = Field(min_length=5, max_length=100)
+    description: str = Field(min_length=5)
     full_amount: int = Field(gt=0)
 
 
