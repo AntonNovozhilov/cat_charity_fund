@@ -23,8 +23,13 @@ class ProjectCreate(ProjectsBase):
         }
 
 
-class ProjectUpdate(ProjectsBase):
-    pass
+class ProjectUpdate(BaseModel):
+    name: Optional[str] = Field(None, min_length=5, max_length=100)
+    description: Optional[str] = Field(None, min_length=5)
+    full_amount: Optional[int] = Field(None, gt=0)
+
+    class Config:
+        extra = 'forbid'
 
 
 class ProjectDB(ProjectsBase):

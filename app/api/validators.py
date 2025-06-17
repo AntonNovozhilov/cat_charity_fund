@@ -16,6 +16,15 @@ async def check_project_exit(project_id: int, session: AsyncSession) -> CharityP
         raise HTTPException(status_code=422, detail="Данного проекта нет в базе данных")
     return obj
 
+async def check_unique_name(name: str, session: AsyncSession) -> CharityProject:
+    obj = await session.execute(
+        select(CharityProject).where(CharityProject.name == name)
+    )
+    obj = obj.scalars().first()
+    if obj:
+        raise HTTPException(status_code=400, detail="Имя должно быть уникальным")
+    return obj
+
 
 async def get_instance_open(model, session: AsyncSession):
     result = await session.execute(select(model).where(model.close_date == None))
@@ -40,28 +49,22 @@ async def check_invested_amount_project(project_id: int, session: AsyncSession):
         )
     return obj
 
-async def check_invested_amount_all(project_id: int, session: AsyncSession):
-    obj = await check_project_exit(project_id, session)
-    if obj.invested_amount == obj.full_amount:
+async def check_invested_amount_all(project: CharityProject):
+    if project.fully_invested:
         raise HTTPException(
             status_code=400,
             detail="Нельзя редактировать проекты, в которые уже проинвестировали",
         )
-    return obj
+    return project
 
 
-async def check_close_date_project(project_id: int, session: AsyncSession):
-    obj = await check_project_exit(project_id, session)
-    if obj.fully_invested:
+async def check_close_date_project(project: CharityProject):
+    if project.fully_invested:
         raise HTTPException(status_code=400, detail="Нельзя редактировать закрытые проекты")
-    return obj
+    return project
 
 
-async def check_upgrade_amount_project(project_id: int, session: AsyncSession):
-    obj = await check_project_exit(project_id, session)
-    invested_amount = obj.invested_amount
-    obj_new = await check_project_exit(project_id, session)
-    full_amount = obj_new.full_amount
-    if full_amount < invested_amount:
+async def check_upgrade_amount_project(project: CharityProject, new_project: CharityProject):
+    if new_project.full_amount < project.invested_amount:
         raise HTTPException(status_code=400, detail="Нельзя уменьшать сумму ниже внесенной")
-    return obj
+    return new_project

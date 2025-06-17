@@ -6,7 +6,8 @@ from app.api.validators import (
     check_invested_amount_project,
     check_project_exit,
     check_upgrade_amount_project,
-    check_invested_amount_all
+    check_invested_amount_all,
+    check_unique_name
 )
 from app.core.db import get_async_session
 from app.core.user import current_superuser
@@ -31,6 +32,7 @@ async def create_charity_project(
     Создаёт благотворительный проект.
     """
 
+    await check_unique_name(project_schema.name, session)
     new_project = await project.create(project_schema, session)
     await invest(new_project, Donation, session)
     return new_project
@@ -78,8 +80,9 @@ async def update_charity_project(
     """
 
     ex_project = await check_project_exit(project_id, session)
-    ex_project = await check_close_date_project(project_id, session)
-    ex_project = await check_invested_amount_all(project_id, session)
+    await check_close_date_project(ex_project)
+    await check_invested_amount_all(ex_project)
+    await check_unique_name(obj.name, session)
     new_project = await project.update(ex_project, obj, session)
-    new_project = await check_upgrade_amount_project(project_id, session)
+    await check_upgrade_amount_project(ex_project, new_project)
     return new_project
