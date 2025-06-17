@@ -37,7 +37,10 @@ def test_fully_invested_amount_for_two_projects(
         "полностью и без остатка покрывают требуемую сумму первого проекта. "
         "Второй проект должен оставаться не инвестированным."
     )
-    [user_client.post(DONATION_URL, json={"full_amount": 500000}) for _ in range(2)]
+    [
+        user_client.post(DONATION_URL, json={"full_amount": 500000})
+        for _ in range(2)
+    ]
     assert charity_project.fully_invested, common_asser_msg
     assert not charity_project_nunchaku.fully_invested, common_asser_msg
     assert charity_project_nunchaku.invested_amount == 0, common_asser_msg
@@ -55,6 +58,8 @@ def test_donation_to_little_invest_project(
     )
     user_client.post(DONATION_URL, json={"full_amount": 900})
     assert not charity_project_little_invested.fully_invested, common_asser_msg
-    assert charity_project_little_invested.invested_amount == 1000, common_asser_msg
+    assert (
+        charity_project_little_invested.invested_amount == 1000
+    ), common_asser_msg
     assert not charity_project_nunchaku.fully_invested, common_asser_msg
     assert charity_project_nunchaku.invested_amount == 0, common_asser_msg

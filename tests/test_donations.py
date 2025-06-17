@@ -196,7 +196,9 @@ def test_donation_invalid(user_client, json_data):
     ids=["superuser", "user", "anonymous"],
 )
 def test_donations_cant_be_updated(donation, client, user_role):
-    response = client.patch(DONATON_DETAILS_URL.format(donation_id=donation.id))
+    response = client.patch(
+        DONATON_DETAILS_URL.format(donation_id=donation.id)
+    )
     assert response.status_code == 404, (
         f"PATCH-запрос {user_role} к эндпоинту `{DONATON_DETAILS_URL}` "
         "должен вернуть ответ со статус-кодом 404."
@@ -213,7 +215,9 @@ def test_donations_cant_be_updated(donation, client, user_role):
     ids=["superuser", "user", "anonymous"],
 )
 def test_donations_cant_be_deleted(donation, client, user_role):
-    response = client.delete(DONATON_DETAILS_URL.format(donation_id=donation.id))
+    response = client.delete(
+        DONATON_DETAILS_URL.format(donation_id=donation.id)
+    )
     assert response.status_code == 404, (
         f"DELETE-запрос {user_role} к эндпоинту `{DONATON_DETAILS_URL}` "
         "должен вернуть ответ со статус-кодом 404."
@@ -224,7 +228,9 @@ def test_create_donation_check_create_date(user_client):
     response_1 = user_client.post(DONATIONS_URL, json={"full_amount": 10})
     time.sleep(0.01)
     response_2 = user_client.post(DONATIONS_URL, json={"full_amount": 20})
-    assert response_1.json()["create_date"] != response_2.json()["create_date"], (
+    assert (
+        response_1.json()["create_date"] != response_2.json()["create_date"]
+    ), (
         "Убедитесь, что при неодновременном создании двух пожертвований "
         "у них отличаются значения в поле `create_date`."
     )

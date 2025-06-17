@@ -5,13 +5,15 @@ from pydantic import BaseModel, Field
 
 
 class ProjectsBase(BaseModel):
-    name: str = Field(min_length=5, max_length=100)
-    description: str = Field(min_length=5)
-    full_amount: int = Field(gt=0)
+    """Базовая схема для проектов."""
+
+    name: str = Field(title='Имя', min_length=5, max_length=100)
+    description: str = Field(title='Описание', min_length=5)
+    full_amount: int = Field(title='Сумма сбора', gt=0)
 
 
 class ProjectCreate(ProjectsBase):
-    pass
+    """Схема для создания проектов."""
 
     class Config:
         schema_extra = {
@@ -21,23 +23,45 @@ class ProjectCreate(ProjectsBase):
                 "full_amount": 100000,
             }
         }
+        title = 'Создание проекта'
 
 
 class ProjectUpdate(BaseModel):
-    name: Optional[str] = Field(None, min_length=5, max_length=100)
-    description: Optional[str] = Field(None, min_length=5)
-    full_amount: Optional[int] = Field(None, gt=0)
+    """Схема для обновления проектов."""
+
+    name: Optional[str] = Field(
+        None,
+        title='Имя',
+        min_length=5,
+        max_length=100
+    )
+    description: Optional[str] = Field(None, title='Описание', min_length=5)
+    full_amount: Optional[int] = Field(None, title='Сумма сбора', gt=0)
 
     class Config:
-        extra = 'forbid'
+        extra = "forbid"
+        schema_extra = {
+            "example": {
+                "name": "Project 100",
+                "description": "Сотый проект",
+                "full_amount": 10005555,
+            }
+        }
+        title = 'Обновление проекта'
 
 
 class ProjectDB(ProjectsBase):
+    """Схема для возврата обхекта из БД."""
+
     id: int
-    invested_amount: int = Field(default=0)
-    fully_invested: bool = Field(default=False)
-    create_date: datetime
-    close_date: Optional[datetime]
+    invested_amount: int = Field(title='Внесенная сумма', default=0)
+    fully_invested: bool = Field(
+        title='Булево значение закрыт/открыт проект',
+        default=False
+    )
+    create_date: datetime = Field(title='Дата создания')
+    close_date: Optional[datetime] = Field(title='Дата закрытия')
 
     class Config:
         orm_mode = True
+        title = 'Проект (ответ из БД).'

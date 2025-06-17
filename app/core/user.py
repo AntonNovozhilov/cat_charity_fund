@@ -1,17 +1,10 @@
-from typing import Optional, Union
+from typing import Union
 
-from fastapi import Depends, Request
-from fastapi_users import (
-    BaseUserManager,
-    FastAPIUsers,
-    IntegerIDMixin,
-    InvalidPasswordException,
-)
-from fastapi_users.authentication import (
-    AuthenticationBackend,
-    BearerTransport,
-    JWTStrategy,
-)
+from fastapi import Depends
+from fastapi_users import (BaseUserManager, FastAPIUsers, IntegerIDMixin,
+                           InvalidPasswordException)
+from fastapi_users.authentication import (AuthenticationBackend,
+                                          BearerTransport, JWTStrategy)
 from fastapi_users_db_sqlalchemy import SQLAlchemyUserDatabase
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -38,11 +31,15 @@ auth_backend = AuthenticationBackend(
 
 
 class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
-    async def validation(self, password: str, user: Union[UserCreate, User]) -> None:
+    async def validation(
+        self, password: str, user: Union[UserCreate, User]
+    ) -> None:
         if len(password) < 3:
             raise InvalidPasswordException("Пароль слишком короткий")
         if user.email in password:
-            raise InvalidPasswordException("Пароль не должен состоять из почты.")
+            raise InvalidPasswordException(
+                "Пароль не должен состоять из почты."
+            )
         print(f"Пользователь {user.email} зарегистрирован.")
 
 

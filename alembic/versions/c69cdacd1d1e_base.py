@@ -5,13 +5,14 @@ Revises: 500ec7bd161c
 Create Date: 2025-06-16 16:53:03.372017
 
 """
-from alembic import op
+
 import sqlalchemy as sa
 
+from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = 'c69cdacd1d1e'
-down_revision = '500ec7bd161c'
+revision = "c69cdacd1d1e"
+down_revision = "500ec7bd161c"
 branch_labels = None
 depends_on = None
 

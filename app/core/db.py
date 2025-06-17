@@ -22,5 +22,7 @@ AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession)
 
 
 async def get_async_session():
+    """Генератор ассинхронной сессии."""
+
     async with AsyncSessionLocal() as async_session:
         yield async_session

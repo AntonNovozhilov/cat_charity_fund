@@ -4,9 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db import get_async_session
 from app.core.user import current_superuser, current_user
 from app.crud.donations import donation
-from app.models.users import User
-from app.schemas.donations import DonationsCreate, DonationsGetCreateUser, DotationsDB
 from app.models.charity_project import CharityProject
+from app.models.users import User
+from app.schemas.donations import (DonationsCreate, DonationsGetCreateUser,
+                                   DotationsDB)
 from app.services.investing import invest
 
 route = APIRouter(tags=["donations"])
@@ -30,7 +31,9 @@ async def create_donation(
     response_model=list[DotationsDB],
     dependencies=[Depends(current_superuser)],
 )
-async def get_all_donations(session: AsyncSession = Depends(get_async_session)):
+async def get_all_donations(
+    session: AsyncSession = Depends(get_async_session),
+):
     """
     Только для суперюзеров.\n
     Возвращает список всех пожертвований.
@@ -47,5 +50,5 @@ async def get_user_donations(
 ):
     """Вернуть список пожертвований пользователя, выполняющего запрос."""
 
-    result = await donation.get_donation_me(user, session)
+    result = await donation.get_multi(session, user)
     return result

@@ -1,19 +1,16 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.validators import (
-    check_close_date_project,
-    check_invested_amount_project,
-    check_project_exit,
-    check_upgrade_amount_project,
-    check_invested_amount_all,
-    check_unique_name
-)
+from app.api.validators import (check_invested_amount_all,
+                                check_invested_amount_project,
+                                check_project_exit, check_unique_name,
+                                check_upgrade_amount_project)
 from app.core.db import get_async_session
 from app.core.user import current_superuser
 from app.crud.charity_projects import project
-from app.schemas.charity_projects import ProjectCreate, ProjectDB, ProjectUpdate
 from app.models.donation import Donation
+from app.schemas.charity_projects import (ProjectCreate, ProjectDB,
+                                          ProjectUpdate)
 from app.services.investing import invest
 
 route = APIRouter(tags=["charity_projects"])
@@ -25,7 +22,8 @@ route = APIRouter(tags=["charity_projects"])
     dependencies=[Depends(current_superuser)],
 )
 async def create_charity_project(
-    project_schema: ProjectCreate, session: AsyncSession = Depends(get_async_session)
+    project_schema: ProjectCreate,
+    session: AsyncSession = Depends(get_async_session),
 ):
     """
     Только для суперюзеров.\n
@@ -39,7 +37,9 @@ async def create_charity_project(
 
 
 @route.get("/charity_project/", response_model=list[ProjectDB])
-async def get_all_charity_projects(session: AsyncSession = Depends(get_async_session)):
+async def get_all_charity_projects(
+    session: AsyncSession = Depends(get_async_session),
+):
     """Возвращает список всех проектов."""
 
     result = await project.get_multi(session)
@@ -56,7 +56,8 @@ async def delete_charity_project(
 ):
     """
     Только для суперюзеров.\n
-    Удаляет проект. Нельзя удалить проект, в который уже были инвестированы средства, его можно только закрыть.
+    Удаляет проект. Нельзя удалить проект,\n
+    в который уже были инвестированы средства, его можно только закрыть.
     """
 
     project_remove = await check_invested_amount_project(project_id, session)
@@ -76,11 +77,11 @@ async def update_charity_project(
 ):
     """
     Только для суперюзеров.\n
-    Закрытый проект нельзя редактировать; нельзя установить требуемую сумму меньше уже вложенной.
+    Закрытый проект нельзя редактировать;\n
+    нельзя установить требуемую сумму меньше уже вложенной.
     """
 
     ex_project = await check_project_exit(project_id, session)
-    await check_close_date_project(ex_project)
     await check_invested_amount_all(ex_project)
     await check_unique_name(obj.name, session)
     new_project = await project.update(ex_project, obj, session)

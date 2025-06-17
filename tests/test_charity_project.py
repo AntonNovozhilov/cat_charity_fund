@@ -79,7 +79,9 @@ def test_create_project_with_autofilling_fields(superuser_client, json_data):
         None,
     ],
 )
-def test_create_invalid_full_amount_value(superuser_client, invalid_full_amount):
+def test_create_invalid_full_amount_value(
+    superuser_client, invalid_full_amount
+):
     response = superuser_client.post(
         PROJECTS_URL,
         json={
@@ -322,7 +324,9 @@ def test_delete_charity_project(superuser_client, charity_project):
 
 
 def test_delete_charity_project_invalid_id(superuser_client):
-    response = superuser_client.delete(PROJECT_DETAILS_URL.format(project_id="999a4"))
+    response = superuser_client.delete(
+        PROJECT_DETAILS_URL.format(project_id="999a4")
+    )
     assert response.status_code == 422, (
         "Если в DELETE-запросе суперпользователя "
         f"к эндпоинту `{PROJECT_DETAILS_URL}` "
@@ -380,7 +384,8 @@ def test_update_charity_project(
     superuser_client, charity_project, json_data, expected_data
 ):
     response = superuser_client.patch(
-        PROJECT_DETAILS_URL.format(project_id=charity_project.id), json=json_data
+        PROJECT_DETAILS_URL.format(project_id=charity_project.id),
+        json=json_data,
     )
     assert response.status_code == 200, (
         "Корректный PATCH-запрос суперпользователя к эндпоинту "
@@ -420,7 +425,9 @@ def test_update_charity_project_full_amount_equal_invested_amount(
     superuser_client, charity_project_little_invested, json_data
 ):
     response = superuser_client.patch(
-        PROJECT_DETAILS_URL.format(project_id=charity_project_little_invested.id),
+        PROJECT_DETAILS_URL.format(
+            project_id=charity_project_little_invested.id
+        ),
         json=json_data,
     )
     assert response.status_code == 200, (
@@ -446,9 +453,12 @@ def test_update_charity_project_full_amount_equal_invested_amount(
         {"full_amount": ""},
     ],
 )
-def test_update_charity_project_invalid(superuser_client, charity_project, json_data):
+def test_update_charity_project_invalid(
+    superuser_client, charity_project, json_data
+):
     response = superuser_client.patch(
-        PROJECT_DETAILS_URL.format(project_id=charity_project.id), json=json_data
+        PROJECT_DETAILS_URL.format(project_id=charity_project.id),
+        json=json_data,
     )
     assert response.status_code == 422, (
         "Убедитесь, что при редактировании проекта запрещено "
@@ -471,7 +481,8 @@ def test_update_charity_with_unexpected_fields(
     superuser_client, charity_project, json_data
 ):
     response = superuser_client.patch(
-        PROJECT_DETAILS_URL.format(project_id=charity_project.id), json=json_data
+        PROJECT_DETAILS_URL.format(project_id=charity_project.id),
+        json=json_data,
     )
     assert response.status_code == 422, (
         "Убедитесь, что при редактировании проекта невозможно изменить "
@@ -512,7 +523,9 @@ def test_update_charity_project_full_amount_smaller_already_invested(
     superuser_client, charity_project_little_invested, full_amount
 ):
     response = superuser_client.patch(
-        PROJECT_DETAILS_URL.format(project_id=charity_project_little_invested.id),
+        PROJECT_DETAILS_URL.format(
+            project_id=charity_project_little_invested.id
+        ),
         json={
             "name": "nunchaku",
             "description": "Huge fan of chimichangas. Wanna buy a lot",
@@ -649,7 +662,9 @@ def test_donation_exist_project_create(superuser_client, donation):
         "равна уже внесённой - проект должен быть "
         "закрыт: значением поля `fully_invested` должно стать `True`."
     )
-    assert data["close_date"] == datetime.now().strftime("%Y-%m-%dT%H:%M:%S"), (
+    assert data["close_date"] == datetime.now().strftime(
+        "%Y-%m-%dT%H:%M:%S"
+    ), (
         "Если при редактировании проекта новая требуемая сумма "
         "равна уже внесённой - проект должен быть "
         "закрыт: для поля `close_date` должно быть установлено занчение, "
@@ -661,7 +676,9 @@ def test_delete_charity_project_already_invested(
     superuser_client, charity_project_little_invested
 ):
     response = superuser_client.delete(
-        PROJECT_DETAILS_URL.format(project_id=charity_project_little_invested.id)
+        PROJECT_DETAILS_URL.format(
+            project_id=charity_project_little_invested.id
+        )
     )
     assert response.status_code == 400, (
         "Убедитесь, что запрещено удаление проектов, в которые уже "

@@ -6,7 +6,9 @@ from app.schemas.users import UserCreate, UserRead, UserUpdate
 router = APIRouter()
 
 router.include_router(
-    fastapi_user.get_auth_router(auth_backend), prefix="/auth/jwt", tags=["auth"]
+    fastapi_user.get_auth_router(auth_backend),
+    prefix="/auth/jwt",
+    tags=["auth"],
 )
 router.include_router(
     fastapi_user.get_register_router(UserRead, UserCreate),

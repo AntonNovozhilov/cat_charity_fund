@@ -1,14 +1,10 @@
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.core.db import get_async_session
 from app.models.charity_project import CharityProject
 
 from .base import BaseCRUD
 
 
 class ProjectCRUD(BaseCRUD):
-    pass
+    """Класс для объекта проектов. Для создания CRUD."""
 
 
 project = ProjectCRUD(CharityProject)

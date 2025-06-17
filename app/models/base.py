@@ -6,6 +6,7 @@ from app.core.db import Base
 
 
 class ModelBase(Base):
+    """Базовая модель с общими полями."""
 
     __abstract__ = True
 
