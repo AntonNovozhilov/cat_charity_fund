@@ -1,13 +1,13 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PositiveInt
 
 
 class DonationsBase(BaseModel):
     """Базовый класс схем пожертвований."""
 
-    full_amount: int = Field(title='Cумма пожертвования', gt=0)
+    full_amount: PositiveInt = Field(title='Cумма пожертвования')
     comment: Optional[str] = Field(title='Комментарий')
 
 

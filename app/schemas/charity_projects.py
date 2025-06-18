@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PositiveInt
 
 
 class ProjectsBase(BaseModel):
@@ -9,7 +9,7 @@ class ProjectsBase(BaseModel):
 
     name: str = Field(title='Имя', min_length=5, max_length=100)
     description: str = Field(title='Описание', min_length=5)
-    full_amount: int = Field(title='Сумма сбора', gt=0)
+    full_amount: PositiveInt = Field(title='Сумма сбора')
 
 
 class ProjectCreate(ProjectsBase):
@@ -36,7 +36,7 @@ class ProjectUpdate(BaseModel):
         max_length=100
     )
     description: Optional[str] = Field(None, title='Описание', min_length=5)
-    full_amount: Optional[int] = Field(None, title='Сумма сбора', gt=0)
+    full_amount: Optional[PositiveInt] = Field(None, title='Сумма сбора')
 
     class Config:
         extra = "forbid"

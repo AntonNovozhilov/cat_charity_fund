@@ -6,9 +6,9 @@ class Settings(BaseSettings):
     Класс конфигурации настроек для ядра приложения.
     """
 
-    title: str
-    date_base_url: str
-    secret: str
+    title: str = 'Название'
+    date_base_url: str = 'sqlite+aiosqlite:///./fastapi.db'
+    secret: str = 'secret'
 
     class Config:
         env_file = ".env"
