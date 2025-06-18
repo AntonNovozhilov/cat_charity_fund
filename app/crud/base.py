@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.validators import check_donation_user
-from app.models.users import User
+from app.models.user import User
 
 
 class BaseCRUD:

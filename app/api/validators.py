@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.charity_project import CharityProject
 from app.models.donation import Donation
-from app.models.users import User
+from app.models.user import User
 
 
 async def check_project_exit(

@@ -5,7 +5,7 @@ from app.core.db import get_async_session
 from app.core.user import current_superuser, current_user
 from app.crud.donations import donation
 from app.models.charity_project import CharityProject
-from app.models.users import User
+from app.models.user import User
 from app.schemas.donations import (DonationsCreate, DonationsGetCreateUser,
                                    DotationsDB)
 from app.services.investing import invest
