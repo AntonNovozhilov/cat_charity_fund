@@ -13,18 +13,18 @@ from app.schemas.charity_projects import (ProjectCreate, ProjectDB,
                                           ProjectUpdate)
 from app.services.investing import invest
 
-route = APIRouter(tags=["charity_projects"])
+route = APIRouter()
 
 
 @route.post(
-    "/charity_project/",
+    "/",
     response_model=ProjectDB,
     dependencies=[Depends(current_superuser)],
 )
 async def create_charity_project(
     project_schema: ProjectCreate,
     session: AsyncSession = Depends(get_async_session),
-):
+) -> ProjectDB:
     """
     Только для суперюзеров.\n
     Создаёт благотворительный проект.
@@ -36,10 +36,10 @@ async def create_charity_project(
     return new_project
 
 
-@route.get("/charity_project/", response_model=list[ProjectDB])
+@route.get("/", response_model=list[ProjectDB])
 async def get_all_charity_projects(
     session: AsyncSession = Depends(get_async_session),
-):
+) -> list[ProjectDB]:
     """Возвращает список всех проектов."""
 
     result = await project.get_multi(session)
@@ -47,13 +47,13 @@ async def get_all_charity_projects(
 
 
 @route.delete(
-    "/charity_project/{project_id}",
+    "/{project_id}",
     response_model=ProjectDB,
     dependencies=[Depends(current_superuser)],
 )
 async def delete_charity_project(
     project_id: int, session: AsyncSession = Depends(get_async_session)
-):
+) -> ProjectDB:
     """
     Только для суперюзеров.\n
     Удаляет проект. Нельзя удалить проект,\n
@@ -66,7 +66,7 @@ async def delete_charity_project(
 
 
 @route.patch(
-    "/charity_project/{project_id}",
+    "/{project_id}",
     response_model=ProjectDB,
     dependencies=[Depends(current_superuser)],
 )
@@ -74,7 +74,7 @@ async def update_charity_project(
     project_id: int,
     obj: ProjectUpdate,
     session: AsyncSession = Depends(get_async_session),
-):
+) -> ProjectDB:
     """
     Только для суперюзеров.\n
     Закрытый проект нельзя редактировать;\n

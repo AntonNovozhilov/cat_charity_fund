@@ -10,15 +10,15 @@ from app.schemas.donations import (DonationsCreate, DonationsGetCreateUser,
                                    DotationsDB)
 from app.services.investing import invest
 
-route = APIRouter(tags=["donations"])
+route = APIRouter()
 
 
-@route.post("/donation/", response_model=DonationsGetCreateUser)
+@route.post("/", response_model=DonationsGetCreateUser)
 async def create_donation(
     data: DonationsCreate,
     session: AsyncSession = Depends(get_async_session),
     user: User = Depends(current_user),
-):
+) -> DonationsGetCreateUser:
     """Сделать пожертвование."""
 
     new_donation = await donation.create(data, session, user)
@@ -27,13 +27,13 @@ async def create_donation(
 
 
 @route.get(
-    "/donation/",
+    "/",
     response_model=list[DotationsDB],
     dependencies=[Depends(current_superuser)],
 )
 async def get_all_donations(
     session: AsyncSession = Depends(get_async_session),
-):
+) -> list[DotationsDB]:
     """
     Только для суперюзеров.\n
     Возвращает список всех пожертвований.
@@ -43,11 +43,11 @@ async def get_all_donations(
     return result
 
 
-@route.get("/donation/my", response_model=list[DonationsGetCreateUser])
+@route.get("/my", response_model=list[DonationsGetCreateUser])
 async def get_user_donations(
     user: User = Depends(current_user),
     session: AsyncSession = Depends(get_async_session),
-):
+) -> list[DonationsGetCreateUser]:
     """Вернуть список пожертвований пользователя, выполняющего запрос."""
 
     result = await donation.get_multi(session, user)
