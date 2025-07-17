@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from .endpoints import dotaton, project, users
+from .endpoints import dotaton, google, project, users
 
 main_router = APIRouter()
 main_router.include_router(users)
@@ -10,3 +10,4 @@ main_router.include_router(
     prefix="/charity_project",
 )
 main_router.include_router(dotaton, tags=["donations"], prefix="/donation")
+main_router.include_router(google, tags=["Google"], prefix="/google")
