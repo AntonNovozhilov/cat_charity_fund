@@ -9,11 +9,18 @@ from .base import BaseCRUD
 class ProjectCRUD(BaseCRUD):
     """Класс для объекта проектов. Для создания CRUD."""
 
-    async def get_projects_by_completion_rate(
-            self,
-            session: AsyncSession) -> list:
+    async def get_projects_by_completion_rate(self, session: AsyncSession) -> list:
         projects = await session.execute(
-            select(CharityProject)
+            select(
+                [
+                    CharityProject.name,
+                    (
+                        func.julianday(CharityProject.close_date) -
+                        func.julianday(CharityProject.create_date),
+                        CharityProject.description,
+                    ),
+                ]
+            )
             .where(CharityProject.close_date is not None)
             .order_by(
                 (
